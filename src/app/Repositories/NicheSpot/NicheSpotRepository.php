@@ -25,15 +25,22 @@ class NicheSpotRepository implements NicheSpotRepositoryInterface
      * 
      * @return Collection
      */
-    public function getNicheSpot(int $userId): Collection
+    public function getNicheSpot(int $userId, $keyword): Collection
     {
-        // NicheSpot を取得し、スタンプ数と is_visited を含めて返す
-        return NicheSpot::withCount('stamps') // スタンプの数を取得
-            ->get()
-            ->map(function ($nicheSpot) use ($userId) {
-                $nicheSpot->is_visited = $nicheSpot->stamps()->where('user_id', $userId)->exists();
-                return $nicheSpot;
+        $query = NicheSpot::withCount('stamps'); // スタンプの数をカウントする
+
+        // キーワードが指定されていた場合、name と address で検索を追加
+        if ($keyword) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('address', 'like', "%{$keyword}%");
             });
+        }
+
+        // 結果を取得して、is_visited を追加
+        return $query->get()->map(function ($nicheSpot) use ($userId) {
+            $nicheSpot->is_visited = $nicheSpot->stamps()->where('user_id', $userId)->exists();
+            return $nicheSpot;
+        });
     }
-    
 }
