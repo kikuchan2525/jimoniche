@@ -61,7 +61,7 @@ class NicheSpotService
                 throw new UnauthorizedException();
             }
             // ニッチスポット一覧取得
-            $nicheSpots = $this->nicheSpotRepository->getNicheSpot($user[User::ID]);
+            $nicheSpots = $this->nicheSpotRepository->getNicheSpot($user[User::ID], $request[NicheSpot::KEYWORD]);
             // レスポンスデータの作成
             foreach($nicheSpots as $nicheSpot){
                 $responseData[NicheSpot::NICHE_SPOTS][] = [
