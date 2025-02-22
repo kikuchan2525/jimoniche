@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
-use App\Exceptions\UnauthorizedException;
 use App\Models\NicheSpot;
 use App\Models\NicheSpotImage;
-use App\Models\Stamp;
 use App\Models\User;
 use App\Repositories\NicheSpot\NicheSpotRepository;
 use App\Repositories\NicheSpotImage\NicheSpotImageRepository;
@@ -20,7 +18,6 @@ use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class NicheSpotService
 {
@@ -32,9 +29,13 @@ class NicheSpotService
      * NicheSpotService コンストラクタ
      * UserRepository の依存性を注入する
      * NicheSpotRepository の依存性を注入する
+     * NicheSpotImageRepository の依存性を注入する
+     * StampRepository の依存性を注入する
      *
      * @param UserRepository $userRepository
      * @param NicheSpotRepository $nicheSpotRepository
+     * @param NicheSpotImageRepository $nicheSpotImageRepository
+     * @param StampRepository $stampRepository
      */
     public function __construct(
         protected UserRepository $userRepository,
@@ -98,7 +99,7 @@ class NicheSpotService
         try {
             // ニッチスポット一覧取得
             $nicheSpot = $this->nicheSpotRepository->getDetailNicheSpot($id);
-            if(!$nicheSpot) {
+            if (!$nicheSpot) {
                 throw new NotFoundException();
             }
             $nicheSpotImages = $this->nicheSpotImageRepository->getNicheSpotImages($id);
