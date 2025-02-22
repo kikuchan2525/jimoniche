@@ -29,4 +29,15 @@ class AuthController extends Controller
     {
         return $this->authService->login($request);
     }
+
+    /**
+     * ログイン情報取得API
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function me(Request $request): JsonResponse
+    {
+        return $this->authService->me($request);
+    }
 }

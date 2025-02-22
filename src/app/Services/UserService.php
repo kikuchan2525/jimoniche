@@ -41,6 +41,7 @@ class UserService
         try{
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
+            // token をデコード
             $decodedJwt = $this->decodeJWT($jwt);
             // 登録データの作成
             $user = [
