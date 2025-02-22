@@ -10,7 +10,7 @@ class NicheSpotImage extends Model
     use SoftDeletes;
 
     // テーブル名
-    const TABLE = 'favorite';
+    const TABLE = 'niche_spot_image';
     public $table = self::TABLE;
 
     // カラム名
@@ -29,4 +29,8 @@ class NicheSpotImage extends Model
         self::UPDATED_AT,
         self::DELETED_AT,
     ];
+
+    // レスポンス用カラム
+    const IMAGE_ID = 'image_id';
+
 }
