@@ -48,6 +48,7 @@ class NicheSpot extends Model
     const NUMBER_OF_VISITS = 'number_of_visits';
     const IS_VISITED = 'is_visited';
     const STAMPS_COUNT = 'stamps_count';
+    const IMAGE_LIST = 'image_list';
 
     public function stamps()
     {
