@@ -13,5 +13,5 @@ interface NicheSpotRepositoryInterface
      * 
      * @return Collection
      */
-    public function getNicheSpot(int $userId, $keyword): Collection;
+    public function getNicheSpot($userId = null, $keyword): Collection;
 }
