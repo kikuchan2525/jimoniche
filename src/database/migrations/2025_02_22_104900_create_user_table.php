@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements("id");
             $table->string('uid');
             $table->string('email')->nullable();
-            $table->bigInteger('provider');
+            $table->string('provider');
             $table->dateTime('token_expired_at')->nullable();
             $table->dateTime('last_logined_at')->nullable();
             $table->timestamps();
