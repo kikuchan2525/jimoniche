@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Repositories\Stamp;
 
 use App\Models\Stamp;
-use Illuminate\Database\Eloquent\Collection;
 
 class StampRepository implements StampRepositoryInterface
 {
 
     /**
-     * NicheSpotRepository コンストラクタ
-     * NicheSpot の依存性を注入する
+     * StampRepository コンストラクタ
+     * Stamp の依存性を注入する
      * 
      * @param Stamp $nicheSpot
      */
