@@ -22,4 +22,12 @@ interface UserRepositoryInterface
      * @return object
      */
     public function getUesr(string $uid): object;
+
+    /**
+     * トークン期限削除
+     * 
+     * @param object $user
+     * @return void
+     */
+    public function deleteTokenExpiredAt(object $user): void;
 }

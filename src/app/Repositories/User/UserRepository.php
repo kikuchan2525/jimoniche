@@ -38,4 +38,15 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->user->where(User::UID, $uid)->first();
     }
+
+    /**
+     * トークン期限削除
+     * 
+     * @param object $user
+     * @return void
+     */
+    public function deleteTokenExpiredAt(object $user): void
+    {
+        $this->user->where(User::ID, $user[User::ID])->update([User::TOKEN_EXPIRED_AT => null]);
+    }
 }
