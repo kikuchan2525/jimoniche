@@ -28,10 +28,13 @@ class NicheSpotController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * ニッチスポット詳細取得API
+     * 
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function show(Request $request, int $id) : JsonResponse
     {
-        //
+        return $this->nicheSpotService->getDetailNicheSpot($request, $id);
     }
 }
