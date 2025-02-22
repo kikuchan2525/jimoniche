@@ -46,24 +46,20 @@ class NicheSpotService
     {
         $responseData = [];
         try {
-            if (!$request->header('Authorization')) {
-                // token が存在しない場合
-                throw new UnauthorizedException();
+            if ($request->header('Authorization')) {
+                // Authorization が存在する場合
+                // Header の Authorization から token を取得
+                $jwt = $request->header('Authorization');
+                // token をデコード
+                $decodedJwt = $this->decodeJWT($jwt);
+                // uid に紐づくユーザーの取得
+                $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
             }
-            // Header の Authorization から token を取得
-            $jwt = $request->header('Authorization');
-            // token をデコード
-            $decodedJwt = $this->decodeJWT($jwt);
-            // uid に紐づくユーザーの取得
-            $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
-            if (!$user) {
-                // uid に紐づく情報が存在しない場合
-                throw new UnauthorizedException();
-            }
+            $userId = $user[User::ID] ?? null;
             // ニッチスポット一覧取得
-            $nicheSpots = $this->nicheSpotRepository->getNicheSpot($user[User::ID], $request[NicheSpot::KEYWORD]);
+            $nicheSpots = $this->nicheSpotRepository->getNicheSpot($userId, $request[NicheSpot::KEYWORD]);
             // レスポンスデータの作成
-            foreach($nicheSpots as $nicheSpot){
+            foreach ($nicheSpots as $nicheSpot) {
                 $responseData[NicheSpot::NICHE_SPOTS][] = [
                     NicheSpot::ID => $nicheSpot[NicheSpot::ID],
                     NicheSpot::NAME => $nicheSpot[NicheSpot::NAME],
