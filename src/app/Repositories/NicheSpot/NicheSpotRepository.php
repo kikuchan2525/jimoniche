@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\NicheSpot;
 
 use App\Models\NicheSpot;
-use App\Models\Stamp;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class NicheSpotRepository implements NicheSpotRepositoryInterface
 {
@@ -42,5 +40,16 @@ class NicheSpotRepository implements NicheSpotRepositoryInterface
             $nicheSpot->is_visited = $nicheSpot->stamps()->where('user_id', $userId)->exists();
             return $nicheSpot;
         });
+    }
+
+    /**
+     * ニッチスポット詳細取得
+     * 
+     * @param $id
+     * @return object|null
+     */
+    public function getDetailNicheSpot($id) : object|null
+    {
+        return $this->nicheSpot->find($id);
     }
 }

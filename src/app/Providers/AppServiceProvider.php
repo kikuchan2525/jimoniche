@@ -27,5 +27,13 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\NicheSpot\NicheSpotRepositoryInterface::class,
             \App\Repositories\NicheSpot\NicheSpotRepository::class,
         );
+        $this->app->bind(
+            \App\Repositories\NicheSpotImage\NicheSpotImageRepositoryInterface::class,
+            \App\Repositories\NicheSpotImage\NicheSpotImageRepository::class,
+        );
+        $this->app->bind(
+            \App\Repositories\Stamp\StampRepositoryInterface::class,
+            \App\Repositories\Stamp\StampRepository::class,
+        );
     }
 }
