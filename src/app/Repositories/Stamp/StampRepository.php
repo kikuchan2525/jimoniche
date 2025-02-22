@@ -31,8 +31,23 @@ class StampRepository implements StampRepositoryInterface
      * @param array $stamp
      * @return void
      */
-    public function createStamp(array $stamp) : void
+    public function createStamp(array $stamp): void
     {
-        $this->stamp->create($stamp); 
+        $this->stamp->create($stamp);
+    }
+
+    /**
+     * スタンプ詳細取得
+     * 
+     * @param int user_id
+     * @param int niche_spot_id
+     * @return object|null
+     */
+    public function getDetailStamp(int $user_id, int $niche_spot_id): object|null
+    {
+        return $this->stamp
+            ->where(Stamp::USER_ID, $user_id)
+            ->where(Stamp::NICHE_SPOT_ID, $niche_spot_id)
+            ->first();
     }
 }

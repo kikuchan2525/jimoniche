@@ -31,10 +31,14 @@ class StampController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * スタンプ情報取得API
+     * 
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show(string $id)
+    public function show(Request $request, int $id): JsonResponse
     {
-        //
+        return $this->stampService->getDetailStamp($request, $id);
     }
 }

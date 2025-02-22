@@ -27,4 +27,7 @@ class Stamp extends Model
         self::UPDATED_AT,
         self::DELETED_AT,
     ];
+
+    // レスポンス用カラム
+    const IS_EXIST_STAMP = 'is_exist_stamp';
 }

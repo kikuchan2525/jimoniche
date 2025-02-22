@@ -40,9 +40,7 @@ class StampService
         protected StampRepository $stampRepository,
         protected UserRepository $userRepository,
         protected NicheSpotRepository $nicheSpotRepository
-    )
-    {
-    }
+    ) {}
 
     /**
      * スタンプ登録
@@ -52,8 +50,8 @@ class StampService
      */
     public function createStamp(Request $request): JsonResponse
     {
-        try{
-            if(!$request->header('Authorization')) {
+        try {
+            if (!$request->header('Authorization')) {
                 // token が存在しない場合
                 throw new UnauthorizedException();
             }
@@ -63,7 +61,7 @@ class StampService
             $decodedJwt = $this->decodeJWT($jwt);
             // uid に紐づくユーザーの取得
             $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
-            if(!$user) {
+            if (!$user) {
                 // uid に紐づく情報が存在しない場合
                 throw new UnauthorizedException();
             }
@@ -77,7 +75,7 @@ class StampService
                 Stamp::NICHE_SPOT_ID => $request[Stamp::NICHE_SPOT_ID]
             ];
             // データベーストランザクションの開始
-            DB::transaction(function () use ($stamp){
+            DB::transaction(function () use ($stamp) {
                 $this->stampRepository->createStamp($stamp);
             });
         } catch (Exception $e) {
@@ -87,6 +85,46 @@ class StampService
         // レスポンス
         return $this->okResponse();
     }
-    
 
+    /**
+     * スタンプ情報取得
+     * 
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getDetailStamp(Request $request, int $id): JsonResponse
+    {
+        $responseData[Stamp::IS_EXIST_STAMP] = false;
+        try {
+            if ($request->header('Authorization')) {
+                // Authorization が存在する場合
+                // Header の Authorization から token を取得
+                $jwt = $request->header('Authorization');
+                // token をデコード
+                $decodedJwt = $this->decodeJWT($jwt);
+                // uid に紐づくユーザーの取得
+                $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
+                if (!$user) {
+                    // uid に紐づく情報が存在しない場合
+                    throw new UnauthorizedException();
+                }
+                if (!$this->nicheSpotRepository->getDetailNicheSpot($id)) {
+                    // id に紐づくニッチスポットが存在しない場合
+                    throw new NotFoundException();
+                }
+                // スタンプ詳細情報取得
+                $stamp = $this->stampRepository->getDetailStamp($user[User::ID], $id);
+
+                if ($stamp) {
+                    // スタンプが存在した場合
+                    $responseData[Stamp::IS_EXIST_STAMP] = true;
+                }
+            }
+        } catch (Exception $e) {
+            // エラーハンドリング
+            return $this->exceptionHandler($e);
+        }
+        return $this->okResponse($responseData);
+    }
 }

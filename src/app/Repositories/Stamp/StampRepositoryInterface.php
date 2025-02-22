@@ -18,4 +18,13 @@ interface StampRepositoryInterface
      * @return void
      */
     public function createStamp(array $stamp): void;
+
+    /**
+     * スタンプ詳細取得
+     * 
+     * @param int user_id
+     * @param int niche_spot_id
+     * @return object|null
+     */
+    public function getDetailStamp(int $user_id, int $niche_spot_id): object|null;
 }
