@@ -59,7 +59,37 @@ class AuthService
         // レスポンス
         return $this->okResponse($this->formatUserResponse($user));
     }
-    
+
+    /**
+     * ログイン情報取得
+     * 
+     * @param Request $requet
+     * @return JsonResponse
+     */
+    public function me(Request $request): JsonResponse
+    {
+        try{
+            if(!$request->header('Authorization')) {
+                // token が存在しない場合
+                throw new UnauthorizedException();
+            }
+            // Header の Authorization から token を取得
+            $jwt = $request->header('Authorization');
+            $decodedJwt = $this->decodeJWT($jwt);
+            // uid に紐づくユーザーの取得
+            $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
+            if(!$user) {
+                // uid に紐づく情報が存在しない場合
+                throw new UnauthorizedException();
+            }
+        } catch (Exception $e) {
+            // エラーハンドリング
+            return $this->exceptionHandler($e);
+        }
+        // レスポンス
+        return $this->okResponse($this->formatUserResponse($user));
+    }
+
     /**
      * ユーザー情報のレスポンスの作成
      * 
