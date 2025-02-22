@@ -26,9 +26,7 @@ class UserService
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(protected UserRepository $userRepository)
-    {
-    }
+    public function __construct(protected UserRepository $userRepository) {}
 
     /**
      * ユーザー登録
@@ -38,7 +36,7 @@ class UserService
      */
     public function createUser(Request $request): JsonResponse
     {
-        try{
+        try {
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
             // token をデコード
@@ -52,7 +50,7 @@ class UserService
                 User::LAST_LOGINED_AT => date('Y-m-d H:i:s', $decodedJwt['payload']['auth_time']),
             ];
             // データベーストランザクションの開始
-            DB::transaction(function () use ($user){
+            DB::transaction(function () use ($user) {
                 $this->userRepository->createUser($user);
             });
         } catch (Exception $e) {
@@ -62,6 +60,4 @@ class UserService
         // レスポンス
         return $this->okResponse();
     }
-    
-
 }
