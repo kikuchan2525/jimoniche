@@ -21,9 +21,10 @@ class UserRepository implements UserRepositoryInterface
     /**
      * ユーザー登録
      * 
+     * @param array
      * @return void
      */
-    public function createUser($user): void
+    public function createUser(array $user): void
     {
         $this->user->create($user);
     }

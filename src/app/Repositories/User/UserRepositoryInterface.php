@@ -11,9 +11,10 @@ interface UserRepositoryInterface
     /**
      * ユーザー登録
      * 
+     * @param array
      * @return void
      */
-    public function createUser($user): void;
+    public function createUser(array $user): void;
 
     /**
      * ユーザー取得
