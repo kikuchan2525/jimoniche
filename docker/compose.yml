@@ -1,0 +1,74 @@
+services:
+  nginx:
+    # nginx
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - ${WEB_PORT}:80
+    depends_on:
+      - php
+    volumes:
+      - ../src/:/var/www/html
+      - ../front/output:/var/www/front/output
+    networks:
+      - default
+
+  php:
+    # php(laravel)
+    container_name: php
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+    volumes:
+      - ../src/:/var/www/html
+
+  node:
+    # vue.js
+    container_name: node
+    build: 
+      context: .
+      dockerfile: ./node/Dockerfile
+    ports:
+      - 8080:8080
+    expose:
+      - 3000
+    volumes:
+      - ../front:/code
+    depends_on:
+      - php
+    tty: true
+
+  mariadb:
+    # mariadb
+    container_name: mariadb
+    build:
+      context: .
+      dockerfile: ./mariadb/Dockerfile
+    ports:
+      - ${MARIADB_PORT}:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      TZ: ${TZ}
+    networks:
+      - default
+    volumes:
+      - db-store:/var/lib/mysql
+
+  adminer:
+    # adminer
+    container_name: adminer
+    image: adminer:latest
+    environment:    
+      ADMINER_DEFAULT_SERVER: mariadb
+      ADMINER_DESIGN: ng9    
+    ports:
+      - 8081:8080
+
+networks:
+  default:
+    name: container_network
+
+volumes:
+  db-store:
