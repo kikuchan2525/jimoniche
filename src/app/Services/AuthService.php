@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Exceptions\UnauthorizedException;
 use App\Models\User;
 use App\Repositories\User\UserRepository;
 use App\Traits\DecodeJwt;
@@ -12,9 +13,8 @@ use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class UserService
+class AuthService
 {
     use ExceptionHandlerTrait;
     use ResponseTrait;
@@ -36,31 +36,43 @@ class UserService
      * @param Request $request
      * @return JsonResponse
      */
-    public function createUser(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         try{
+            if(!$request->header('Authorization')) {
+                // token が存在しない場合
+                throw new UnauthorizedException();
+            }
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
             $decodedJwt = $this->decodeJWT($jwt);
-            // 登録データの作成
-            $user = [
-                User::UID => $decodedJwt['payload']['user_id'],
-                User::EMAIL => $decodedJwt['payload']['email'],
-                User::PROVIDER => $decodedJwt['payload']['firebase']['sign_in_provider'],
-                User::TOKEN_EXPIRED_AT => date('Y-m-d H:i:s', $decodedJwt['payload']['exp']),
-                User::LAST_LOGINED_AT => date('Y-m-d H:i:s', $decodedJwt['payload']['auth_time']),
-            ];
-            // データベーストランザクションの開始
-            DB::transaction(function () use ($user){
-                $this->userRepository->createUser($user);
-            });
+            // uid に紐づくユーザーの取得
+            $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
+            if(!$user) {
+                // uid に紐づく情報が存在しない場合
+                throw new UnauthorizedException();
+            }
         } catch (Exception $e) {
             // エラーハンドリング
             return $this->exceptionHandler($e);
         }
         // レスポンス
-        return $this->okResponse();
+        return $this->okResponse($this->formatUserResponse($user));
     }
     
-
+    /**
+     * ユーザー情報のレスポンスの作成
+     * 
+     * @param object $user
+     * @return array
+     */
+    public function formatUserResponse(object $user):array
+    {
+        return [
+            User::ID => $user[User::ID],
+            User::UID => $user[User::UID],
+            User::EMAIL => $user[User::EMAIL],
+            User::PROVIDER => $user[User::PROVIDER]
+        ];
+    }
 }

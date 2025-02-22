@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\User;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -25,5 +26,16 @@ class UserRepository implements UserRepositoryInterface
     public function createUser($user): void
     {
         $this->user->create($user);
+    }
+
+    /**
+     * ユーザー取得
+     * 
+     * @param string $uid
+     * @return object
+     */
+    public function getUesr(string $uid): object
+    {
+        return $this->user->where(User::UID, $uid)->first();
     }
 }
