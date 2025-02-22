@@ -24,4 +24,15 @@ class StampRepository implements StampRepositoryInterface
     {
         return $this->stamp->where(Stamp::NICHE_SPOT_ID, $nicheSpotId)->count();
     }
+
+    /**
+     * スタンプ登録
+     * 
+     * @param array $stamp
+     * @return void
+     */
+    public function createStamp(array $stamp) : void
+    {
+        $this->stamp->create($stamp); 
+    }
 }
