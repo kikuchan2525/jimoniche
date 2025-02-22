@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repositories\User;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
