@@ -40,6 +40,9 @@ class NicheSpot extends Model
         self::DELETED_AT,
     ];
 
+    // リクエスト用定数
+    const KEYWORD = 'keyword';
+
     // レスポンス用定数
     const NICHE_SPOTS = 'niche_spots';
     const NUMBER_OF_VISITS = 'number_of_visits';
