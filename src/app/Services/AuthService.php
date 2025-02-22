@@ -13,6 +13,7 @@ use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuthService
 {
@@ -88,6 +89,40 @@ class AuthService
         }
         // レスポンス
         return $this->okResponse($this->formatUserResponse($user));
+    }
+
+    /**
+     * ログアウト
+     * 
+     * @param Request $requet
+     * @return JsonResponse
+     */
+    public function logout(Request $request) : JsonResponse {
+        try{
+            if(!$request->header('Authorization')) {
+                // token が存在しない場合
+                throw new UnauthorizedException();
+            }
+            // Header の Authorization から token を取得
+            $jwt = $request->header('Authorization');
+            $decodedJwt = $this->decodeJWT($jwt);
+            // uid に紐づくユーザーの取得
+            $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
+            if(!$user) {
+                // uid に紐づく情報が存在しない場合
+                throw new UnauthorizedException();
+            }
+            // データベーストランザクションの開始
+            DB::transaction(function () use ($user){
+                // トークン期限削除
+                $this->userRepository->deleteTokenExpiredAt($user);
+            });
+        } catch (Exception $e) {
+            // エラーハンドリング
+            return $this->exceptionHandler($e);
+        }
+        // レスポンス
+        return $this->okResponse();
     }
 
     /**
