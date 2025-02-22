@@ -8,6 +8,9 @@ interface StampRepositoryInterface
 {
     /**
      * スタンプ数取得
+     * 
+     * @param int $nicheSpotId
+     * @return int
      */
     public function getCountStamp($nicheSpotId): int;
 
