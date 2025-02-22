@@ -46,6 +46,7 @@ class AuthService
             }
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
+            // token をデコード
             $decodedJwt = $this->decodeJWT($jwt);
             // uid に紐づくユーザーの取得
             $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
@@ -76,6 +77,7 @@ class AuthService
             }
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
+            // token をデコード
             $decodedJwt = $this->decodeJWT($jwt);
             // uid に紐づくユーザーの取得
             $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
@@ -105,6 +107,7 @@ class AuthService
             }
             // Header の Authorization から token を取得
             $jwt = $request->header('Authorization');
+            // token をデコード
             $decodedJwt = $this->decodeJWT($jwt);
             // uid に紐づくユーザーの取得
             $user = $this->userRepository->getUesr($decodedJwt['payload']['user_id']);
