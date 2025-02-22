@@ -14,4 +14,12 @@ interface NicheSpotRepositoryInterface
      * @return Collection
      */
     public function getNicheSpot(int $userId, $keyword): Collection;
+
+    /**
+     * ニッチスポット詳細取得
+     * 
+     * @param $id
+     * @return object|null
+     */
+    public function getDetailNicheSpot($id): object|null;
 }
