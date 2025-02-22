@@ -21,12 +21,21 @@ class UserService
     use DecodeJwt;
 
     /**
-     * 
+     * UserService コンストラクタ
+     * UserRepository の依存性を注入する
+     *
+     * @param UserRepository $userRepository
      */
     public function __construct(protected UserRepository $userRepository)
     {
     }
 
+    /**
+     * ユーザー登録
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function createUser(Request $request): JsonResponse
     {
         try{
