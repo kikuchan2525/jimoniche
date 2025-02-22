@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Exceptions\UnauthorizedException;
 use App\Models\NicheSpot;
+use App\Models\NicheSpotImage;
+use App\Models\Stamp;
 use App\Models\User;
 use App\Repositories\NicheSpot\NicheSpotRepository;
+use App\Repositories\NicheSpotImage\NicheSpotImageRepository;
+use App\Repositories\Stamp\StampRepository;
 use App\Repositories\User\UserRepository;
 use App\Traits\DecodeJwt;
 use App\Traits\ExceptionHandlerTrait;
@@ -33,7 +38,9 @@ class NicheSpotService
      */
     public function __construct(
         protected UserRepository $userRepository,
-        protected NicheSpotRepository $nicheSpotRepository
+        protected NicheSpotRepository $nicheSpotRepository,
+        protected NicheSpotImageRepository $nicheSpotImageRepository,
+        protected StampRepository $stampRepository
     ) {}
 
     /**
@@ -63,7 +70,7 @@ class NicheSpotService
             // ニッチスポット一覧取得
             $nicheSpots = $this->nicheSpotRepository->getNicheSpot($user[User::ID], $request[NicheSpot::KEYWORD]);
             // レスポンスデータの作成
-            foreach($nicheSpots as $nicheSpot){
+            foreach ($nicheSpots as $nicheSpot) {
                 $responseData[NicheSpot::NICHE_SPOTS][] = [
                     NicheSpot::ID => $nicheSpot[NicheSpot::ID],
                     NicheSpot::NAME => $nicheSpot[NicheSpot::NAME],
@@ -74,6 +81,46 @@ class NicheSpotService
                     NicheSpot::IS_VISITED => $nicheSpot[NicheSpot::IS_VISITED]
                 ];
             }
+        } catch (Exception $e) {
+            // エラーハンドリング
+            return $this->exceptionHandler($e);
+        }
+        // レスポンス
+        return $this->okResponse($responseData);
+    }
+
+    /**
+     * ニッチスポット詳細取得
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDetailNicheSpot(Request $request, int $id): JsonResponse
+    {
+        $responseData = [];
+        $images = [];
+        try {
+            // ニッチスポット一覧取得
+            $nicheSpot = $this->nicheSpotRepository->getDetailNicheSpot($id);
+            if(!$nicheSpot) {
+                throw new NotFoundException();
+            }
+            $nicheSpotImages = $this->nicheSpotImageRepository->getNicheSpotImages($id);
+            foreach ($nicheSpotImages as $nicheSpotImage) {
+                $images[] = [
+                    NicheSpotImage::IMAGE_ID => $nicheSpotImage[NicheSpotImage::ID],
+                    NicheSpotImage::IMAGE_PATH => config('app.url') . '/storage/' . $nicheSpotImage[NicheSpotImage::IMAGE_PATH]
+                ];
+            }
+            // レスポンスデータの作成
+            $responseData = [
+                NicheSpot::ID => $nicheSpot[NicheSpot::ID],
+                NicheSpot::NAME => $nicheSpot[NicheSpot::NAME],
+                NicheSpot::ADDRESS => $nicheSpot[NicheSpot::ADDRESS],
+                NicheSpot::NUMBER_OF_VISITS => $this->stampRepository->getCountStamp($id),
+                NicheSpot::IMAGE_LIST => $images,
+                NicheSpot::COMMENT => $nicheSpot[NicheSpot::COMMENT]
+            ];
         } catch (Exception $e) {
             // エラーハンドリング
             return $this->exceptionHandler($e);
