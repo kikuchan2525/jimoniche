@@ -31,7 +31,7 @@ class AuthService
     }
 
     /**
-     * ユーザー登録
+     * ログイン
      * 
      * @param Request $request
      * @return JsonResponse
