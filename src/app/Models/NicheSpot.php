@@ -39,4 +39,18 @@ class NicheSpot extends Model
         self::UPDATED_AT,
         self::DELETED_AT,
     ];
+
+    // リクエスト用定数
+    const KEYWORD = 'keyword';
+
+    // レスポンス用定数
+    const NICHE_SPOTS = 'niche_spots';
+    const NUMBER_OF_VISITS = 'number_of_visits';
+    const IS_VISITED = 'is_visited';
+    const STAMPS_COUNT = 'stamps_count';
+
+    public function stamps()
+    {
+        return $this->hasMany(Stamp::class, 'niche_spot_id', 'id');
+    }
 }

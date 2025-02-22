@@ -23,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\User\UserRepositoryInterface::class,
             \App\Repositories\User\UserRepository::class,
         );
+        $this->app->bind(
+            \App\Repositories\NicheSpot\NicheSpotRepositoryInterface::class,
+            \App\Repositories\NicheSpot\NicheSpotRepository::class,
+        );
     }
 }
