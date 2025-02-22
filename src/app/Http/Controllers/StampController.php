@@ -15,9 +15,7 @@ class StampController extends Controller
      *
      * @param StampService $stampService
      */
-    public function __construct(protected StampService $stampService)
-    {
-    }
+    public function __construct(protected StampService $stampService) {}
 
     /**
      * スタンプ登録API
@@ -25,7 +23,7 @@ class StampController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request):JsonResponse
+    public function store(Request $request): JsonResponse
     {
         return $this->stampService->createStamp($request);
     }

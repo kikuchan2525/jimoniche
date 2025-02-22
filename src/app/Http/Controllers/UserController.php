@@ -22,6 +22,7 @@ class UserController extends Controller
     /**
      * ユーザー登録API
      * 
+     * @param Request $request
      * @return JsonResponse
      */
     public function __invoke(Request $request): JsonResponse

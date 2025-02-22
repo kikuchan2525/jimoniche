@@ -22,7 +22,7 @@ class AuthService
     use DecodeJwt;
 
     /**
-     * UserService コンストラクタ
+     * AuthService コンストラクタ
      * UserRepository の依存性を注入する
      *
      * @param UserRepository $userRepository

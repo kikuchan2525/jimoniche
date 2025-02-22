@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\UnauthorizedException;
-use App\Models\NicheSpot;
 use App\Models\Stamp;
 use App\Models\User;
 use App\Repositories\NicheSpot\NicheSpotRepository;
